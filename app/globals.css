@@ -264,3 +264,82 @@ a { color: inherit; text-decoration: none; }
   .hero-actions { align-items: flex-start; flex-direction: column; }
   .landing-footer { align-items: flex-start; flex-direction: column; gap: 6px; }
 }
+
+/* Readability and pricing page refinements */
+.page-subtitle { font-size: 14px; }
+.section-title { font-size: 16px; }
+.section-desc { font-size: 12px; }
+.field-label { font-size: 12px; }
+.field-hint { font-size: 11px; }
+.input, .textarea, .select { font-size: 13px; }
+.input, .select { height: 44px; }
+.field-block { margin-top: 20px; }
+.primary-button, .secondary-button, .quiet-button { font-size: 12px; }
+.tone-option strong { font-size: 12px; }
+.tone-option span { font-size: 10px; }
+.review-area { min-height: 170px; }
+.draft-text { font-size: 13px; }
+.history-review { font-size: 12px; }
+
+.pricing-teaser {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: min(1000px,calc(100% - 64px));
+  margin: 0 auto 82px;
+  border: 1px solid #e8e9df;
+  border-radius: 18px;
+  background: linear-gradient(115deg,#f1f5ea 0%,#fbfaf6 78%);
+  padding: 30px 34px;
+}
+.pricing-teaser h2 { max-width: 470px; margin: 9px 0 0; font-size: clamp(23px,3vw,32px); font-weight: 600; letter-spacing: -1px; line-height: 1.14; }
+.pricing-teaser p { max-width: 560px; margin: 10px 0 0; color: #758079; font-size: 13px; line-height: 1.7; }
+.pricing-teaser .secondary-button { flex: 0 0 auto; }
+.landing-footer > a:last-child { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-weight: 650; }
+
+.pricing-page { min-height: 100vh; overflow: hidden; background: radial-gradient(ellipse at 50% 0%,#eff4ea 0,transparent 36rem),var(--paper); }
+.pricing-hero { width: min(770px,calc(100% - 48px)); margin: 0 auto; padding: 40px 0 32px; text-align: center; }
+.pricing-back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 32px; color: #77827b; font-size: 12px; }
+.pricing-hero .hero-kicker { margin: 0 auto; }
+.pricing-title { margin: 22px 0 0; font-size: clamp(48px,7vw,76px); font-weight: 590; letter-spacing: -4.6px; line-height: .99; }
+.pricing-title em { color: var(--green); font-family: Georgia,serif; font-weight: 500; }
+.pricing-lede { max-width: 555px; margin: 18px auto 0; color: #758079; font-size: 15px; line-height: 1.75; }
+.pricing-beta-note { display: flex; max-width: 635px; align-items: flex-start; gap: 10px; margin: 23px auto 0; border: 1px solid #e4eadb; border-radius: 12px; background: rgba(255,255,255,.78); padding: 13px 15px; color: #6d796f; font-size: 12px; line-height: 1.6; text-align: left; }
+.pricing-beta-note svg { flex: 0 0 auto; margin-top: 2px; color: var(--green); }
+.pricing-beta-note strong { color: #384a3e; }
+.pricing-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 15px; width: min(1080px,calc(100% - 64px)); margin: 0 auto; align-items: stretch; }
+.pricing-card { position: relative; display: flex; min-width: 0; flex-direction: column; border: 1px solid #e7e8e0; border-radius: 17px; background: rgba(255,255,255,.9); padding: 25px 23px 22px; box-shadow: 0 10px 30px rgba(31,44,37,.035); transition: transform .18s ease,box-shadow .18s ease; }
+.pricing-card:hover { transform: translateY(-3px); box-shadow: 0 17px 36px rgba(31,44,37,.08); }
+.pricing-card-featured { border-color: #7b9d87; box-shadow: 0 16px 40px rgba(39,100,79,.12); }
+.pricing-popular { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); border-radius: 22px; background: var(--green); padding: 6px 12px; color: white; font-size: 10px; font-weight: 680; white-space: nowrap; }
+.pricing-card-head h2 { margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -.45px; }
+.pricing-card-head p { min-height: 43px; margin: 7px 0 0; color: #818c84; font-size: 12px; line-height: 1.55; }
+.pricing-price { display: flex; min-height: 61px; align-items: baseline; gap: 7px; margin-top: 20px; border-bottom: 1px solid #eeefe9; padding-bottom: 16px; }
+.pricing-price strong { font-size: 36px; font-weight: 640; letter-spacing: -1.5px; }
+.pricing-price span { color: #87918a; font-size: 11px; }
+.pricing-card ul { display: grid; gap: 13px; margin: 19px 0 25px; padding: 0; list-style: none; }
+.pricing-card li { display: flex; align-items: flex-start; gap: 9px; color: #536058; font-size: 12px; line-height: 1.45; }
+.pricing-card li svg { flex: 0 0 auto; color: #568169; }
+.pricing-cta { width: 100%; min-height: 44px; margin-top: auto; }
+.pricing-cta:disabled { cursor: not-allowed; border-color: #eceee7; background: #f6f7f3; color: #8e978f; opacity: 1; }
+.pricing-footnote { width: min(790px,calc(100% - 48px)); margin: 18px auto 0; color: #939c94; font-size: 11px; line-height: 1.7; text-align: center; }
+.pricing-faq { display: grid; grid-template-columns: .8fr 1.2fr; gap: 60px; width: min(940px,calc(100% - 64px)); margin: 76px auto 84px; border-top: 1px solid #e8e9e2; padding-top: 34px; }
+.pricing-faq h2 { margin: 10px 0 0; font-size: 30px; font-weight: 600; letter-spacing: -1.3px; line-height: 1.12; }
+.pricing-faq-list { display: grid; gap: 19px; }
+.pricing-faq-list article + article { border-top: 1px solid #e8e9e2; padding-top: 16px; }
+.pricing-faq-list h3 { margin: 0; font-size: 13px; font-weight: 690; }
+.pricing-faq-list p { margin: 6px 0 0; color: #7b867f; font-size: 12px; line-height: 1.65; }
+.pricing-page .landing-footer { background: rgba(255,255,255,.35); }
+
+@media (max-width: 760px) {
+  .pricing-teaser { width: calc(100% - 36px); align-items: flex-start; flex-direction: column; margin-bottom: 54px; padding: 23px; }
+  .pricing-grid { width: calc(100% - 36px); max-width: 460px; grid-template-columns: 1fr; gap: 20px; }
+  .pricing-card { padding: 24px; }
+  .pricing-faq { width: calc(100% - 36px); grid-template-columns: 1fr; gap: 23px; margin: 55px auto; }
+  .pricing-faq h2 { max-width: 350px; font-size: 27px; }
+  .pricing-back { margin-bottom: 24px; }
+  .pricing-title { font-size: clamp(47px,12vw,64px); letter-spacing: -3.5px; }
+  .pricing-lede { font-size: 14px; }
+  .pricing-page .landing-footer { align-items: flex-start; flex-direction: column; gap: 9px; }
+}

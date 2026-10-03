@@ -10,7 +10,7 @@ export default function HomePage() {
     <main className="landing">
       <nav className="landing-nav" aria-label="Main navigation">
         <Brand />
-        <div className="landing-links"><a href="#how-it-works">How it works</a><Link className="quiet-button" href="/login">Sign in</Link></div>
+        <div className="landing-links"><a href="#how-it-works">How it works</a><Link href="/pricing">Pricing</Link><Link className="quiet-button" href="/login">Sign in</Link></div>
       </nav>
       <section className="landing-hero">
         <div className="hero-copy">
@@ -49,7 +49,11 @@ export default function HomePage() {
           <article className="feature-card"><span className="feature-icon"><Copy size={16} /></span><h3>Pick, copy, and post</h3><p>Compare three drafts, choose your favorite, and copy it wherever you reply to customers.</p></article>
         </div>
       </section>
-      <footer className="landing-footer"><Brand /><span>Thoughtful replies, less busywork.</span></footer>
+      <section className="pricing-teaser">
+        <div><div className="eyebrow">Straightforward by design</div><h2>Good replies shouldn’t need an enterprise budget.</h2><p>ReplyKit is free while we’re in beta. Proposed launch plans start at ₹199 a month, with simple limits and no sales call.</p></div>
+        <Link className="secondary-button" href="/pricing">See the plan <ArrowRight size={14} /></Link>
+      </section>
+      <footer className="landing-footer"><Brand /><span>Thoughtful replies, less busywork.</span><Link href="/pricing">Pricing</Link></footer>
     </main>
   );
 }

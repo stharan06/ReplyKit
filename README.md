@@ -53,6 +53,18 @@ Review text is customer data. The application does not log it to the console or 
 
 The 30-reply cap is an MVP guardrail, not a billing system. A new UTC day starts the next count window.
 
+## Proposed launch pricing
+
+Pricing is shown on `/pricing`, but the prices are a proposal for beta feedback: subscriptions, payment collection, and monthly plan enforcement are not implemented. Beta access is free; the current API limit is 30 generations per user per day.
+
+| Plan | Proposed price | Planned monthly reply sets |
+| --- | ---: | ---: |
+| Free | ₹0 | 30 |
+| Solo | ₹199/month | 300 |
+| Busy | ₹499/month | 900 |
+
+The initial target is a single-location independent business, so the proposal keeps one business voice and the same core workflow on every plan. Only reply volume changes; team and multi-location tiers should wait until those features exist. As a market reference, [UpBlick lists a ₹199/month starter plan](https://www.upblick.com/pricing) with Google review management, AI replies, and WhatsApp workflows, while [Birdeye requests a quote](https://birdeye.com/pricing/). Those products have broader feature sets, so these are price anchors rather than a direct feature comparison. Validate the limits and willingness to pay with business owners before enabling billing.
+
 ## Product scope
 
 ReplyKit currently covers the paste → draft → review → copy workflow. Google review syncing, auto-posting, multiple locations, team access, billing, additional languages, and mobile apps are intentionally out of scope until real owners ask for them.
