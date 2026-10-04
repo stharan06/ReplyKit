@@ -96,7 +96,6 @@ export default function HomePage() {
           <Link href="/pricing">Pricing</Link>
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>
-          <a href="mailto:hello@replykit.com">Contact: hello@replykit.com</a>
         </div>
       </footer>
     </main>
