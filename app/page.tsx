@@ -3,11 +3,12 @@ import { ArrowRight, Check, HeartHandshake, MessageCircle, ShieldCheck, Star, Wa
 import HomeDemo from "@/components/home-demo";
 import TryItBox from "@/components/try-it-box";
 import Footer from "@/components/footer";
+import BrandLogo from "@/components/brand-logo";
 
 function Brand() {
   return (
     <Link className="brand" href="/">
-      <span className="brand-mark"><MessageCircle size={17} strokeWidth={2.4} /></span>
+      <BrandLogo size={32} />
       <span>replykit</span>
     </Link>
   );

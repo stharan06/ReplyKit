@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ClipboardList, History, LogOut, MessageCircle, Settings2, Sparkles } from "lucide-react";
+import { ClipboardList, History, LogOut, Settings2, Sparkles } from "lucide-react";
 import { signOut } from "@/lib/actions";
+import BrandLogo from "@/components/brand-logo";
 
 const routes = [
   { href: "/generate", label: "Write a reply", icon: Sparkles },
@@ -16,7 +17,7 @@ export default function AppShell({ children, businessName, email }: { children: 
   const active = routes.find((route) => pathname.startsWith(route.href))?.label ?? "Workspace";
   return <div className="app-frame">
     <aside className="sidebar">
-      <Link className="brand" href="/"><span className="brand-mark"><MessageCircle size={17} strokeWidth={2.4} /></span><span>replykit</span></Link>
+      <Link className="brand" href="/"><BrandLogo size={32} /><span>replykit</span></Link>
       <div className="side-label">Workspace</div>
       <nav className="side-nav" aria-label="Workspace navigation">{routes.map(({ href, label, icon: Icon }) => <Link className={`side-link ${pathname.startsWith(href) ? "active" : ""}`} href={href} key={href}><Icon size={16} strokeWidth={1.8} />{label}</Link>)}</nav>
       <div className="sidebar-spacer" />

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Check, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Sparkles } from "lucide-react";
 import Footer from "@/components/footer";
+import BrandLogo from "@/components/brand-logo";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -45,7 +46,7 @@ export default function PricingPage() {
   return (
     <main className="pricing-page">
       <nav className="landing-nav" aria-label="Main navigation">
-        <Link className="brand" href="/"><span className="brand-mark"><MessageCircle size={17} strokeWidth={2.4} /></span><span>replykit</span></Link>
+        <Link className="brand" href="/"><BrandLogo size={32} /><span>replykit</span></Link>
         <div className="landing-links">
           <Link href="/#how-it-works">How it works</Link>
           <Link href="/privacy">Privacy</Link>

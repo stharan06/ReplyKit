@@ -1,13 +1,11 @@
 import Link from "next/link";
-import { MessageCircle } from "lucide-react";
+import BrandLogo from "@/components/brand-logo";
 
 export default function Footer() {
   return (
     <footer className="landing-footer">
       <Link className="brand" href="/">
-        <span className="brand-mark">
-          <MessageCircle size={17} strokeWidth={2.4} />
-        </span>
+        <BrandLogo size={26} />
         <span>replykit</span>
       </Link>
       <span>ReplyKit - Thoughtful replies, less busywork.</span>

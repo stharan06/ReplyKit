@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowLeft, Check, HeartHandshake, MessageCircle } from "lucide-react";
+import { ArrowLeft, Check, HeartHandshake } from "lucide-react";
 import LoginForm from "@/components/login-form";
 import { createClient } from "@/lib/supabase/server";
+import BrandLogo from "@/components/brand-logo";
 
 export const metadata: Metadata = {
   title: "Sign in or create account",
@@ -25,7 +26,7 @@ export default async function LoginPage({ searchParams }: PageProps) {
     <main className="login-page">
       <section className="login-side">
         <Link className="brand" href="/">
-          <span className="brand-mark"><MessageCircle size={17} /></span>
+          <BrandLogo size={32} />
           <span>replykit</span>
         </Link>
         <div className="login-side-copy">
@@ -34,9 +35,7 @@ export default async function LoginPage({ searchParams }: PageProps) {
           <p>ReplyKit helps you turn kind words, honest feedback, and tough moments into replies that sound like you.</p>
         </div>
         <div className="login-decoration">
-          <span className="brand-mark" style={{ width: 26, height: 26, borderRadius: 8 }}>
-            <MessageCircle size={13} />
-          </span>
+          <BrandLogo size={24} />
           <span>
             <HeartHandshake size={12} style={{ verticalAlign: "-2px", marginRight: 5 }} /> Made for independent businesses
           </span>
