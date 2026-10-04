@@ -61,7 +61,6 @@ Pricing is shown on `/pricing`, but the prices are a proposal for beta feedback:
 | --- | ---: | ---: |
 | Free | ₹0 | 30 |
 | Solo | ₹199/month | 300 |
-| Busy | ₹499/month | 900 |
 
 The initial target is a single-location independent business, so the proposal keeps one business voice and the same core workflow on every plan. Only reply volume changes; team and multi-location tiers should wait until those features exist. As a market reference, [UpBlick lists a ₹199/month starter plan](https://www.upblick.com/pricing) with Google review management, AI replies, and WhatsApp workflows, while [Birdeye requests a quote](https://birdeye.com/pricing/). Those products have broader feature sets, so these are price anchors rather than a direct feature comparison. Validate the limits and willingness to pay with business owners before enabling billing.
 
