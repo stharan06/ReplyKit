@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Check, MessageCircle, Sparkles } from "lucide-react";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 const plans = [
   {
-    name: "Free beta",
+    name: "Free beta (today)",
     price: "₹0",
     period: "during beta",
     description: "Try the complete ReplyKit workflow with your own reviews today.",
@@ -24,10 +25,10 @@ const plans = [
     available: true,
   },
   {
-    name: "Paid plan, planned",
+    name: "Solo (planned)",
     price: "₹199",
     period: "/ month · around launch",
-    description: "Solo - planned for launch. Around ₹199 a month for 300 sets of drafts. Price may change based on beta feedback. Nothing is charged today.",
+    description: "Solo - planned. Around ₹199 a month for 300 sets of drafts. The price may change based on beta feedback. Nothing is charged today.",
     features: [
       "300 review draft sets per month",
       "One custom brand voice",
@@ -59,7 +60,7 @@ export default function PricingPage() {
         <p className="pricing-lede">ReplyKit keeps review replies simple, so pricing can stay simple too. The plans below are a launch proposal; beta access is free today.</p>
         <div className="pricing-beta-note">
           <Sparkles size={15} />
-          <span><strong>During the beta you can generate up to 30 sets of drafts a day, free. When billing starts, limits will be monthly and announced by email before anything changes.</strong></span>
+          <span><strong>During the beta you can generate up to 30 sets of drafts a day, free. When paid plans start, limits will be monthly, and we will email you before anything changes.</strong></span>
         </div>
       </header>
 
@@ -114,15 +115,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <footer className="landing-footer">
-        <Link className="brand" href="/"><span className="brand-mark"><MessageCircle size={17} /></span><span>replykit</span></Link>
-        <span>ReplyKit - Thoughtful replies, less busywork.</span>
-        <div style={{ display: "flex", gap: 14 }}>
-          <Link href="/pricing">Pricing</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/terms">Terms</Link>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }

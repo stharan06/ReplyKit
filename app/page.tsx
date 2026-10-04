@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Check, HeartHandshake, MessageCircle, ShieldCheck, Star, WandSparkles } from "lucide-react";
 import HomeDemo from "@/components/home-demo";
 import TryItBox from "@/components/try-it-box";
+import Footer from "@/components/footer";
 
 function Brand() {
   return (
@@ -35,7 +36,9 @@ export default function HomePage() {
             <a className="text-link" href="#how-it-works">See how it works <ArrowRight size={13} /></a>
           </div>
           <div className="hero-trust">
-            <ShieldCheck size={13} /> Your reviews stay private. You always choose what to post.
+            <Link href="/privacy" style={{ display: "inline-flex", alignItems: "center", gap: 7, color: "inherit", textDecoration: "none" }}>
+              <ShieldCheck size={13} /> Your reviews stay private. You always choose what to post.
+            </Link>
           </div>
         </div>
 
@@ -70,7 +73,7 @@ export default function HomePage() {
           <article className="feature-card">
             <span className="feature-icon"><WandSparkles size={16} /></span>
             <h3>Make it sound like you</h3>
-            <p>Set your business voice once. Choose a warm, formal, or short reply style whenever you need one.</p>
+            <p>Set your business voice once. Tough reviews get calm, careful replies, while kind reviews get warm, grateful responses.</p>
           </article>
           <article className="feature-card">
             <span className="feature-icon"><Check size={16} /></span>
@@ -84,20 +87,12 @@ export default function HomePage() {
         <div>
           <div className="eyebrow">Straightforward by design</div>
           <h2>Good replies shouldn’t need an enterprise budget.</h2>
-          <p>ReplyKit is free while we’re in beta. Proposed launch plans start at ₹199 a month, with simple limits and no sales call.</p>
+          <p>ReplyKit is free while we're in beta. Paid plans are planned, and we'll tell you before anything changes.</p>
         </div>
         <Link className="secondary-button" href="/pricing">See the plan <ArrowRight size={14} /></Link>
       </section>
 
-      <footer className="landing-footer">
-        <Brand />
-        <span>ReplyKit - Thoughtful replies, less busywork.</span>
-        <div style={{ display: "flex", gap: 14 }}>
-          <Link href="/pricing">Pricing</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/terms">Terms</Link>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }

@@ -1,26 +1,28 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
+import crypto from "crypto";
 import { buildPrompt, generateDrafts } from "@/lib/prompt";
 
 export const runtime = "nodejs";
 
 const trySchema = z.object({
-  review_text: z.string().trim().min(3, "Please paste or type a review first.").max(600, "Reviews must be 600 characters or fewer."),
+  review: z.string().trim().min(5, "Please enter at least 5 characters.").max(600, "Review must be 600 characters or fewer.").optional(),
+  review_text: z.string().trim().min(5, "Please enter at least 5 characters.").max(600, "Review must be 600 characters or fewer.").optional(),
   rating: z.number().int().min(1).max(5),
   tone: z.enum(["warm", "formal", "short"]).default("warm"),
+}).refine((data) => Boolean(data.review || data.review_text), {
+  message: "Review text is required.",
+  path: ["review"],
 });
 
-// Daily IP rate limiter (3 tries per visitor per calendar day)
-type IpRecord = { count: number; date: string; lastInput?: string };
-const ipCache = new Map<string, IpRecord>();
+// Daily counter for ip_hash (hash of IP, not raw IP)
+type TryLimitRecord = { count: number; day: string };
+const tryLimits = new Map<string, TryLimitRecord>();
 
-function getClientIp(request: NextRequest): string {
+function getIpHash(request: NextRequest): string {
   const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    const first = forwarded.split(",")[0]?.trim();
-    if (first) return first;
-  }
-  return request.headers.get("x-real-ip") ?? "127.0.0.1";
+  const ip = (forwarded ? forwarded.split(",")[0]?.trim() : null) ?? request.headers.get("x-real-ip") ?? "127.0.0.1";
+  return crypto.createHash("sha256").update(ip).digest("hex");
 }
 
 function getTodayString(): string {
@@ -28,35 +30,36 @@ function getTodayString(): string {
   return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-${String(now.getUTCDate()).padStart(2, "0")}`;
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   let body: unknown;
   try {
-    body = await request.json();
+    body = await req.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON request." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
   }
 
   const parsed = trySchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid input." }, { status: 400 });
+    return NextResponse.json(
+      { error: parsed.error.issues[0]?.message ?? "Invalid input" },
+      { status: 400 }
+    );
   }
 
-  const ip = getClientIp(request);
-  const today = getTodayString();
-  const record = ipCache.get(ip);
+  const reviewText = (parsed.data.review ?? parsed.data.review_text)!.trim();
+  const ipHash = getIpHash(req);
+  const day = getTodayString();
+  const existing = tryLimits.get(ipHash);
 
   let currentCount = 0;
-  if (record && record.date === today) {
-    currentCount = record.count;
-    if (record.lastInput && record.lastInput.toLowerCase() === parsed.data.review_text.toLowerCase()) {
-      return NextResponse.json({ error: "You already generated a reply for this exact review." }, { status: 400 });
-    }
+  if (existing && existing.day === day) {
+    currentCount = existing.count;
   }
 
   if (currentCount >= 3) {
     return NextResponse.json(
       {
-        error: "You’ve reached the limit of 3 free preview tries today. Create a free account to continue writing replies with three options and your own voice!",
+        error: "You’ve reached today’s 3 free tries. Create a free account to continue writing replies with three options and your own brand voice.",
         remaining: 0,
       },
       { status: 429 }
@@ -81,7 +84,7 @@ export async function POST(request: NextRequest) {
     const prompt = buildPrompt(
       {
         business_id: "00000000-0000-0000-0000-000000000000",
-        review_text: parsed.data.review_text,
+        review_text: reviewText,
         rating: parsed.data.rating,
         tone: parsed.data.tone,
       },
@@ -91,17 +94,17 @@ export async function POST(request: NextRequest) {
 
     if (process.env.LLM_API_KEY) {
       const drafts = await generateDrafts(prompt.system, prompt.user);
-      draft = drafts[0] || fallbackReply(parsed.data.review_text, parsed.data.rating, parsed.data.tone);
+      draft = drafts[0] || fallbackReply(reviewText, parsed.data.rating, parsed.data.tone);
     } else {
-      // Realistic fallback draft if LLM_API_KEY is not configured yet
-      draft = fallbackReply(parsed.data.review_text, parsed.data.rating, parsed.data.tone);
+      draft = fallbackReply(reviewText, parsed.data.rating, parsed.data.tone);
     }
-  } catch (err) {
-    draft = fallbackReply(parsed.data.review_text, parsed.data.rating, parsed.data.tone);
+  } catch {
+    draft = fallbackReply(reviewText, parsed.data.rating, parsed.data.tone);
   }
 
+  // Update limit count for ip_hash (reviews are NOT saved)
   const newCount = currentCount + 1;
-  ipCache.set(ip, { count: newCount, date: today, lastInput: parsed.data.review_text });
+  tryLimits.set(ipHash, { count: newCount, day });
 
   return NextResponse.json({
     draft,
@@ -113,20 +116,19 @@ function fallbackReply(review: string, rating: number, tone: "warm" | "formal" |
   const isNegative = rating <= 2;
   if (isNegative) {
     if (tone === "short") {
-      return "We're very sorry your experience did not meet expectations. Please reach out to us directly so we can make this right.";
+      return "We're very sorry your visit did not meet expectations. Please reach out to us directly so we can make this right.";
     }
     if (tone === "formal") {
-      return "Thank you for bringing this to our attention. We take this feedback seriously and apologize for falling short during your visit. Please contact our team directly so we can look into this further.";
+      return "Thank you for bringing this to our attention. We apologize for falling short of our standards during your visit. Please contact our team directly so we can resolve this matter.";
     }
-    return "We're genuinely sorry your visit fell short of what you deserved. We always aim to provide a great experience, and we would appreciate the chance to learn more and make things right — please email us directly.";
+    return "We're sorry your visit went this way. That is not the experience we want anyone to have. We'd like to hear more and put things right — please reach out to us directly so we can follow up with you.";
   }
 
-  // Positive / neutral
   if (tone === "short") {
     return "Thank you so much for the kind words and support! We look forward to seeing you again soon.";
   }
   if (tone === "formal") {
-    return "Thank you for taking the time to share your review. We greatly appreciate your patronage and hope to welcome you back in the near future.";
+    return "Thank you for taking the time to share your feedback. We greatly appreciate your visit and look forward to welcoming you back.";
   }
-  return "Thank you so much for stopping by and taking the time to leave such a thoughtful review! We're thrilled you had a good experience and can't wait to welcome you back.";
+  return "Thank you so much for stopping by and taking the time to leave such a thoughtful review! We're thrilled you had a wonderful visit and can't wait to see you again soon.";
 }

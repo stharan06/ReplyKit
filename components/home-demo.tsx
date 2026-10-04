@@ -8,10 +8,14 @@ export default function HomeDemo() {
   const [copied, setCopied] = useState(false);
 
   const happyReview = "“Such a lovely little cafe. The cardamom latte was perfect and Arjun remembered my order from last week!”";
-  const happyReply = "Thank you for coming back! We’re so glad the cardamom latte was perfect, and we’ll tell Arjun you noticed he remembered your order. See you next week!";
+  const happyReply = "Thank you for coming back! We're so glad the cardamom latte was perfect, and we'll tell Arjun you noticed he remembered your order. See you next week!";
   
   const toughReview = "“Waited 40 minutes for a cold sandwich. Nobody apologised. Won't be back.”";
   const toughReply = "We're sorry your visit went this way, especially the long wait and the cold sandwich. That is not the experience we want anyone to have. We'd like to hear more and put things right - please email us at the address on our page so we can follow up directly.";
+
+  function getWordCount(text: string) {
+    return text.trim().split(/\s+/).length + " words";
+  }
 
   function handleCopy() {
     const text = tab === "happy" ? happyReply : toughReply;
@@ -37,12 +41,12 @@ export default function HomeDemo() {
               background: tab === "happy" ? "var(--green-soft)" : "transparent",
               color: tab === "happy" ? "var(--green-deep)" : "#77817a",
               borderRadius: 6,
-              padding: "4px 8px",
+              padding: "4px 9px",
               fontSize: 10,
               fontWeight: 650,
             }}
           >
-            Happy review
+            Happy review (5★)
           </button>
           <button
             type="button"
@@ -53,12 +57,12 @@ export default function HomeDemo() {
               background: tab === "tough" ? "var(--green-soft)" : "transparent",
               color: tab === "tough" ? "var(--green-deep)" : "#77817a",
               borderRadius: 6,
-              padding: "4px 8px",
+              padding: "4px 9px",
               fontSize: 10,
               fontWeight: 650,
             }}
           >
-            Tough review
+            Tough review (1★)
           </button>
         </div>
       </div>
@@ -77,7 +81,7 @@ export default function HomeDemo() {
         <div className="demo-reply">
           <div className="demo-reply-top">
             <span>{tab === "happy" ? "WARM · OPTION 1" : "CALM & CAREFUL · OPTION 1"}</span>
-            <span>{tab === "happy" ? "27 words" : "48 words"}</span>
+            <span>{getWordCount(tab === "happy" ? happyReply : toughReply)}</span>
           </div>
           <p>{tab === "happy" ? happyReply : toughReply}</p>
           <div className="demo-action">
@@ -105,13 +109,19 @@ export default function HomeDemo() {
         </div>
 
         {tab === "tough" && (
-          <div style={{ marginTop: 12, borderTop: "1px solid #edf0ec", paddingTop: 10 }}>
-            <p style={{ margin: "0 0 4px", fontSize: 10, fontWeight: 700, color: "var(--green-deep)" }}>
+          <div style={{ marginTop: 14, borderTop: "1px solid #edf0ec", paddingTop: 10 }}>
+            <p style={{ margin: "0 0 5px", fontSize: 10.5, fontWeight: 700, color: "var(--green-deep)" }}>
               Tough reviews get calm, careful replies.
             </p>
-            <p style={{ margin: 0, fontSize: 9.5, color: "#77817a", lineHeight: 1.5 }}>
-              <strong>Why this reply works:</strong> it names the specific problems, apologises for the experience without arguing or admitting fault, makes no promise of compensation, and moves the conversation offline.
+            <p style={{ margin: "0 0 4px", fontSize: 9.5, fontWeight: 650, color: "#546057" }}>
+              Why this reply works, and what to say on the page:
             </p>
+            <ul style={{ margin: 0, paddingLeft: 16, fontSize: 9.5, color: "#77817a", lineHeight: 1.55 }}>
+              <li>It names the specific problems, so it does not read like a template</li>
+              <li>It apologises for the experience without arguing or admitting fault</li>
+              <li>It makes no promise of refunds or compensation</li>
+              <li>It moves the conversation offline</li>
+            </ul>
           </div>
         )}
       </div>

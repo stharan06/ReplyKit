@@ -57,6 +57,7 @@ export default async function LoginPage({ searchParams }: PageProps) {
             <Link href="/pricing">Pricing</Link>
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
+            <a href="mailto:tharannaidus1@gmail.com">Contact</a>
           </div>
         </div>
       </section>

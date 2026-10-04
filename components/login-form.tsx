@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { FormEvent } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, LoaderCircle, LockKeyhole, Mail, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -184,6 +185,9 @@ export default function LoginForm({ linkExpired = false }: { linkExpired?: boole
             : "Sign in with email"}
           <ArrowRight size={13} />
         </button>
+        <p style={{ margin: "10px 0 0", textAlign: "center", fontSize: 11, color: "#8a948c" }}>
+          By signing in you agree to the <Link href="/terms" style={{ color: "var(--green)", textDecoration: "underline" }}>Terms</Link> and <Link href="/privacy" style={{ color: "var(--green)", textDecoration: "underline" }}>Privacy Policy</Link>.
+        </p>
       </form>
 
       <div style={{ marginTop: 14, textAlign: "center" }}>
