@@ -4,8 +4,8 @@ export const toneSchema = z.enum(["warm", "formal", "short"]);
 export const categorySchema = z.enum(["restaurant", "clinic", "salon", "gym", "other"]);
 
 export const generateSchema = z.object({
-  business_id: z.string().uuid(),
-  review_text: z.string().trim().min(1, "Paste a review first.").max(1500, "Reviews must be 1,500 characters or fewer."),
+  business_id: z.string().uuid().optional(),
+  review_text: z.string().trim().min(5, "Please enter at least 5 characters.").max(600, "Review must be 600 characters or fewer."),
   rating: z.number().int().min(1).max(5),
   tone: toneSchema,
 });

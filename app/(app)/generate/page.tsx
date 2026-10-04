@@ -17,6 +17,30 @@ export default async function GeneratePage() {
 
   return <main className="content-wrap">
     <div className="page-heading"><div><div className="eyebrow">Made for your next customer</div><h1 className="page-title">Write a reply</h1><p className="page-subtitle">A good response starts with listening. Paste the review and we’ll help with the words.</p></div><span className="pill"><span className="status-dot" style={{ width: 6, height: 6, boxShadow: "none" }} /> Three drafts, yours to choose</span></div>
-    {!configured ? <div className="panel setup-card"><span className="feature-icon"><Settings2 size={16} /></span><h2 className="section-title" style={{ marginTop: 15 }}>First, set your brand voice</h2><p className="section-desc" style={{ maxWidth: 430 }}>Add your business name and a few voice notes. ReplyKit uses them to make drafts feel personal instead of generic.</p><Link className="primary-button" style={{ marginTop: 18 }} href="/voice">Set up your voice <ArrowRight size={13} /></Link></div> : <><div className="notice" style={{ marginBottom: 15 }}><Info size={14} /><span>Review text is sent securely to generate your drafts and saved to your private history. Read every reply before posting.</span></div><Generator businessId={business!.id} businessName={business!.name} /></>}
+    {!configured ? (
+      <>
+        <div className="panel setup-card" style={{ marginBottom: 20 }}>
+          <span className="feature-icon"><Settings2 size={16} /></span>
+          <h2 className="section-title" style={{ marginTop: 15 }}>Personalise your brand voice</h2>
+          <p className="section-desc" style={{ maxWidth: 430 }}>Add your business name and voice notes so replies sound like you. Or start drafting immediately with our natural default voice.</p>
+          <div style={{ display: "flex", gap: 10, marginTop: 18, flexWrap: "wrap" }}>
+            <Link className="primary-button" href="/voice">Set up your voice <ArrowRight size={13} /></Link>
+          </div>
+        </div>
+        <div className="notice" style={{ marginBottom: 15 }}>
+          <Info size={14} />
+          <span>Review text is sent securely to generate your drafts. Read every reply before posting.</span>
+        </div>
+        <Generator businessId={business?.id ?? ""} businessName={business?.name ?? "Your business"} />
+      </>
+    ) : (
+      <>
+        <div className="notice" style={{ marginBottom: 15 }}>
+          <Info size={14} />
+          <span>Review text is sent securely to generate your drafts and saved to your private history. Read every reply before posting.</span>
+        </div>
+        <Generator businessId={business!.id} businessName={business!.name} />
+      </>
+    )}
   </main>;
 }

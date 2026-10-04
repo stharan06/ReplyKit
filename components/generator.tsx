@@ -23,12 +23,25 @@ export default function Generator({ businessId, businessName }: { businessId: st
 
   async function generate() {
     setError("");
+    const trimmed = review.trim();
+    if (trimmed.length < 5) {
+      setError("Please enter at least 5 characters.");
+      return;
+    }
+    if (trimmed.length > 600) {
+      setError("Reviews must be 600 characters or fewer.");
+      return;
+    }
     setBusy(true);
     setDrafts([]);
     setChosen("");
     setCopied("");
     try {
-      const response = await fetch("/api/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ business_id: businessId, review_text: review, rating, tone }) });
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ business_id: businessId, review_text: trimmed, rating, tone }),
+      });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "We couldn't write those replies. Please try again.");
       setReplyId(result.reply_id);
@@ -55,11 +68,11 @@ export default function Generator({ businessId, businessName }: { businessId: st
   return <div className="generator-grid">
     <section className="panel generator-form">
       <div><h2 className="section-title">The review</h2><p className="section-desc">A specific detail helps us write a more genuine reply.</p></div>
-      <div className="field-block"><label className="field-label" htmlFor="review-text">What did your customer say? <span className="field-hint">{review.length}/1,500</span></label><textarea className="textarea review-area" id="review-text" value={review} maxLength={1500} onChange={(event) => setReview(event.target.value)} placeholder="Paste the full review here…" /></div>
+      <div className="field-block"><label className="field-label" htmlFor="review-text">What did your customer say? <span className="field-hint">{review.length}/600</span></label><textarea className="textarea review-area" id="review-text" value={review} maxLength={600} onChange={(event) => setReview(event.target.value)} placeholder="Paste the full review here…" /></div>
       <div className="field-block"><div className="field-label"><span>Star rating</span>{rating <= 2 && <span className="field-hint" style={{ color: "#ad755f" }}>We’ll use extra-careful language</span>}</div><div className="rating-picker" role="radiogroup" aria-label="Star rating">{[1, 2, 3, 4, 5].map((value) => <button type="button" role="radio" aria-checked={rating === value} aria-label={`${value} star${value === 1 ? "" : "s"}`} className={`star-button ${value <= rating ? "active" : ""}`} onClick={() => setRating(value)} key={value}><Star size={15} fill={value <= rating ? "currentColor" : "none"} /></button>)}</div></div>
       <div className="field-block"><div className="field-label">Reply style</div><div className="tone-options" role="radiogroup" aria-label="Reply style">{tones.map((item) => <button type="button" role="radio" aria-checked={tone === item.id} className={`tone-option ${tone === item.id ? "selected" : ""}`} onClick={() => setTone(item.id)} key={item.id}><strong>{item.title}</strong><span>{item.description}</span></button>)}</div></div>
       {error && <div className="notice error-notice" style={{ marginTop: 16 }}><AlertCircle size={14} /><span>{error}</span></div>}
-      <div className="generate-footer"><span className="privacy-note"><LockKeyhole size={11} /> Private to your workspace</span><button className="primary-button" onClick={generate} disabled={busy || !review.trim()}>{busy ? <><LoaderCircle size={14} className="spin" /> Writing drafts…</> : <><Sparkles size={14} /> Write my replies</>}</button></div>
+      <div className="generate-footer"><span className="privacy-note"><LockKeyhole size={11} /> Private to your workspace</span><button className="primary-button" onClick={generate} disabled={busy || review.trim().length < 5}>{busy ? <><LoaderCircle size={14} className="spin" /> Writing drafts…</> : <><Sparkles size={14} /> Write my replies</>}</button></div>
       {busy && <div className="privacy-note" style={{ justifyContent: "flex-end", marginTop: 11 }}>Usually ready in a few seconds</div>}
     </section>
     <section aria-live="polite" aria-busy={busy}>
