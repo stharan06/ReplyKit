@@ -92,15 +92,45 @@ export async function generateDrafts(system: string, user: string, providedKey?:
     throw new Error("Server not configured");
   }
 
-  // Detect Google Gemini vs OpenAI vs custom provider endpoint
-  const isGeminiKey = apiKey.startsWith("AIza");
-  const defaultEndpoint = isGeminiKey
-    ? "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
-    : "https://api.openai.com/v1/chat/completions";
-  const defaultModel = isGeminiKey ? "gemini-2.5-flash" : "gpt-4o-mini";
+  // Detect provider: OpenRouter vs Google Gemini vs OpenAI vs custom provider endpoint
+  const isOpenRouterKey = apiKey.startsWith("sk-or") || (process.env.LLM_API_URL && process.env.LLM_API_URL.includes("openrouter.ai"));
+  const isGeminiKey = apiKey.startsWith("AIza") || (process.env.LLM_API_URL && process.env.LLM_API_URL.includes("generativelanguage.googleapis.com"));
+
+  let defaultEndpoint = "https://api.openai.com/v1/chat/completions";
+  let defaultModel = "gpt-4o-mini";
+
+  if (isOpenRouterKey) {
+    defaultEndpoint = "https://openrouter.ai/api/v1/chat/completions";
+    defaultModel = "openai/gpt-4o-mini";
+  } else if (isGeminiKey) {
+    defaultEndpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+    defaultModel = "gemini-2.5-flash";
+  }
 
   const endpoint = process.env.LLM_API_URL || defaultEndpoint;
-  const model = process.env.LLM_MODEL || defaultModel;
+  let model = process.env.LLM_MODEL || defaultModel;
+
+  // If using OpenRouter and model is a shorthand like "gpt-4o-mini", prefix with vendor namespace
+  if (endpoint.includes("openrouter.ai") && !model.includes("/")) {
+    if (model.startsWith("gpt-") || model.startsWith("o1") || model.startsWith("o3") || model.startsWith("text-")) {
+      model = `openai/${model}`;
+    } else if (model.startsWith("gemini-")) {
+      model = `google/${model}`;
+    } else if (model.startsWith("claude-")) {
+      model = `anthropic/${model}`;
+    }
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${apiKey}`,
+    "Content-Type": "application/json",
+  };
+
+  if (endpoint.includes("openrouter.ai")) {
+    headers["HTTP-Referer"] = process.env.NEXT_PUBLIC_SITE_URL || "https://replykit-psi.vercel.app";
+    headers["X-Title"] = "ReplyKit";
+  }
+
   let lastError = "The reply service returned an unreadable response.";
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -117,29 +147,39 @@ export async function generateDrafts(system: string, user: string, providedKey?:
     try {
       response = await fetch(endpoint, {
         method: "POST",
-        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ model, messages, temperature: 0.7, max_tokens: 700 }),
-        signal: AbortSignal.timeout(20000),
+        signal: AbortSignal.timeout(25000),
       });
     } catch {
       console.error(`LLM provider connection failed on attempt ${attempt + 1}`);
       throw new Error("The reply service could not be reached. Please try again in a moment.");
     }
     if (!response.ok) {
-      console.error(`LLM provider error: status ${response.status} (${response.statusText})`);
+      let providerErrorMessage = "";
+      try {
+        const errPayload: any = await response.json();
+        providerErrorMessage = errPayload?.error?.message || errPayload?.message || "";
+      } catch {
+        // ignore parse error
+      }
+      console.error(`LLM provider error: status ${response.status} (${response.statusText})${providerErrorMessage ? ` - ${providerErrorMessage}` : ""}`);
       if (response.status === 401) {
-        throw new Error("Invalid LLM API key or authentication failed. Check LLM_API_KEY in Vercel settings.");
+        throw new Error(providerErrorMessage || "Invalid LLM API key or authentication failed. Check LLM_API_KEY in Vercel settings.");
+      }
+      if (response.status === 402 || response.status === 403) {
+        throw new Error(providerErrorMessage || "LLM account credits depleted or access forbidden. Check your OpenRouter account balance.");
       }
       if (response.status === 404) {
-        throw new Error(`LLM model not found (${model}). Check LLM_MODEL in environment settings.`);
+        throw new Error(providerErrorMessage || `LLM model not found (${model}). Check LLM_MODEL in environment settings.`);
       }
       if (response.status === 429) {
-        throw new Error("LLM quota or rate limit exceeded. Check your provider billing or quota.");
+        throw new Error(providerErrorMessage || "LLM quota or rate limit exceeded. Check your provider billing or quota.");
       }
       if (response.status >= 500) {
         throw new Error("The LLM provider service is temporarily busy. Please try again in a moment.");
       }
-      throw new Error("The reply service could not create drafts with the current configuration.");
+      throw new Error(providerErrorMessage || "The reply service could not create drafts with the current configuration.");
     }
     const payload: unknown = await response.json().catch(() => null);
     const raw = typeof payload === "object" && payload !== null && "choices" in payload

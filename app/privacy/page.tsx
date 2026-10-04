@@ -75,7 +75,7 @@ export default function PrivacyPage() {
                 <strong>Supabase</strong> — Stores user accounts and workspace records. Your data is protected with row-level security so other users cannot access it. ReplyKit&apos;s operator can access data only when needed to run or fix the service.
               </li>
               <li>
-                <strong>LLM Provider (OpenAI / Google Gemini)</strong> — Review text is sent to our LLM provider to generate drafts. We have configured our account so that data is not used for model training, per the provider&apos;s terms.
+                <strong>LLM Provider (OpenAI / Google Gemini / OpenRouter)</strong> — Review text is sent to our LLM provider to generate drafts. We have configured our account so that data is not used for model training, per the provider&apos;s terms.
               </li>
               <li>
                 <strong>Vercel</strong> — Hosts our application frontend and API endpoints. Our providers encrypt data in transit and at rest.
